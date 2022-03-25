@@ -26,6 +26,10 @@ public class ProductService {
         return productRepo.listarPage(limit, offset);
     }
     
+    public List<Product> listarPageCat(Integer categId,Integer limit,Integer offset){
+        return productRepo.listarPageCat(categId,limit, offset);
+    }
+    
     public Optional<Product> getOne(int id){
         return productRepo.findById(id);
     }

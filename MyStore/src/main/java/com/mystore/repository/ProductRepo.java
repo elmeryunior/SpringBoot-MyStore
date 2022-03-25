@@ -17,6 +17,9 @@ public interface ProductRepo extends JpaRepository<Product, Integer>{
 	@Query(nativeQuery = true, value = "SELECT * FROM `product` LIMIT :limit OFFSET :offset ")
 	List<Product> listarPage(@Param("limit") Integer limit,@Param("offset") Integer offset);
 	
+	@Query(nativeQuery = true, value = "SELECT * FROM `product` WHERE `category_id`= :categId LIMIT :limit OFFSET :offset ")
+	List<Product> listarPageCat(@Param("categId") Integer categId, @Param("limit") Integer limit,@Param("offset") Integer offset);
+	
 	Optional<Product> findByTitle(String title);
 	List<Product> findByCategoryId(Integer categoryId);
 	boolean existsByTitle(String title);

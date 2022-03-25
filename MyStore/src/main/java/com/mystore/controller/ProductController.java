@@ -56,7 +56,7 @@ public class ProductController {
 	public ResponseEntity<List<Product>> listarPage(@PathVariable("limit") Integer limit,@PathVariable("offset") Integer offset){
 		List<Product> list = productService.listarPage(limit,offset);
 		return new ResponseEntity(list, HttpStatus.OK);
-	}		
+	}
 
 	@ApiOperation("Listar producto dado un ID")
 	@GetMapping("/detalleProduct/{id}")
@@ -68,11 +68,11 @@ public class ProductController {
 	}   
 	
 	@ApiOperation("Listar producto dado un ID")
-	@GetMapping("/listarProductCat/{id}")
-	public ResponseEntity<List<Product>> getByCategory(@PathVariable("id") Integer id){
+	@GetMapping("/listarProductCat/{id}/{limit}/{offset}")
+	public ResponseEntity<List<Product>> getByCategory(@PathVariable("id") Integer id,@PathVariable("limit") Integer limit,@PathVariable("offset") Integer offset){
 		if(!categoryService.existsById(id))
             return new ResponseEntity(new Mensaje("no existe esta catagoria"), HttpStatus.NOT_FOUND);
-		List<Product> product = productService.findByCategoryId(id);
+		List<Product> product = productService.listarPageCat(id, limit, offset);
         return new ResponseEntity(product, HttpStatus.OK);
 	}  
 	
