@@ -37,9 +37,9 @@ public class CategoryController {
 	@PostMapping("/guardarCategory")
     public ResponseEntity<?> create(@RequestBody Category category){
         if(StringUtils.isBlank(category.getName()))
-            return new ResponseEntity(new Mensaje("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("Name is required"), HttpStatus.BAD_REQUEST);
         categoryService.save(category);
-        return new ResponseEntity(new Mensaje("producto creado"), HttpStatus.OK);
+        return new ResponseEntity(new Mensaje("Category created"), HttpStatus.OK);
     }
 	
 	@ApiOperation("Visualizar listado de categorias")
@@ -53,7 +53,7 @@ public class CategoryController {
 	@GetMapping("/listarCategId/{id}")
 	public ResponseEntity<Category> getById(@PathVariable("id") Integer id){
 		if(!categoryService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new Mensaje("No exist"), HttpStatus.NOT_FOUND);
         Category category = categoryService.getOne(id).get();
         return new ResponseEntity(category, HttpStatus.OK);
 	}
@@ -62,24 +62,24 @@ public class CategoryController {
 	@DeleteMapping("/eliminarCategory/{id}")
 	public ResponseEntity<?> deleteCat(@PathVariable("id")int id){
         if(!categoryService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new Mensaje("This category does not exist"), HttpStatus.NOT_FOUND);
         categoryService.delete(id);
-        return new ResponseEntity(new Mensaje("producto eliminado"), HttpStatus.OK);
+        return new ResponseEntity(new Mensaje("Category deleted"), HttpStatus.OK);
     }
 	
 	@ApiOperation("Actualizar usuario mediante un json")
 	@PutMapping("/actualizarCategory")
 	   public ResponseEntity<?> update(@PathVariable("id")int id, @RequestBody Category category){
         if(!categoryService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new Mensaje("No exist"), HttpStatus.NOT_FOUND);
         if(categoryService.existsByName(category.getName()) && categoryService.getByName(category.getName()).get().getId() != id)
-            return new ResponseEntity(new Mensaje("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("That name already exists"), HttpStatus.BAD_REQUEST);
         if(StringUtils.isBlank(category.getName()))
-            return new ResponseEntity(new Mensaje("el nombre es obligatorio"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("Name is required"), HttpStatus.BAD_REQUEST);
 
         Category cat = categoryService.getOne(id).get();
         cat.setName(cat.getName());
         categoryService.save(cat);
-        return new ResponseEntity(new Mensaje("categoria actualizada"), HttpStatus.OK);
+        return new ResponseEntity(new Mensaje("Category updated"), HttpStatus.OK);
     }
 }

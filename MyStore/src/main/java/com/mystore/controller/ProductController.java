@@ -40,15 +40,15 @@ public class ProductController {
 	@PostMapping("/guardarProduct")
     public ResponseEntity<?> create(@RequestBody Product product){
         if(StringUtils.isBlank(product.getTitle()))
-            return new ResponseEntity(new Mensaje("el titulo es obligatorio"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("The title is required"), HttpStatus.BAD_REQUEST);
         if(product.getPrice()==null || product.getPrice()<0 )
-            return new ResponseEntity(new Mensaje("el precio debe ser mayor que 0"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("Price must be greater than 0"), HttpStatus.BAD_REQUEST);
         if(productService.existsByTitle(product.getTitle()))
-            return new ResponseEntity(new Mensaje("ese nombre ya existe"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("That name already exists"), HttpStatus.BAD_REQUEST);
         if(product.getImages().length < 0)
-            return new ResponseEntity(new Mensaje("debe agregar una imagen"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("You must add an image"), HttpStatus.BAD_REQUEST);
         productService.save(product);
-        return new ResponseEntity(new Mensaje("producto creado"), HttpStatus.OK);
+        return new ResponseEntity(new Mensaje("Producto created"), HttpStatus.OK);
     }
 	
 	@ApiOperation("Visualizar listado de productos")
@@ -62,7 +62,7 @@ public class ProductController {
 	@GetMapping("/detalleProduct/{id}")
 	public ResponseEntity<Product> getById(@PathVariable("id") Integer id){
 		if(!productService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new Mensaje("No exist"), HttpStatus.NOT_FOUND);
         Product product = productService.getOne(id).get();
         return new ResponseEntity(product, HttpStatus.OK);
 	}   
@@ -71,37 +71,38 @@ public class ProductController {
 	@GetMapping("/listarProductCat/{id}/{limit}/{offset}")
 	public ResponseEntity<List<Product>> getByCategory(@PathVariable("id") Integer id,@PathVariable("limit") Integer limit,@PathVariable("offset") Integer offset){
 		if(!categoryService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe esta catagoria"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new Mensaje("This category does not exist"), HttpStatus.NOT_FOUND);
 		List<Product> product = productService.listarPageCat(id, limit, offset);
         return new ResponseEntity(product, HttpStatus.OK);
 	}  
 	
 	@ApiOperation("Eliminar producto dado un ID")
 	@DeleteMapping("/eliminarProduct/{id}")
-	public ResponseEntity<?> deleteProduct(@PathVariable("id")int id){
+	public ResponseEntity<?> deleteProduct(@PathVariable("id")Integer id){
         if(!productService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity(new Mensaje("No exist"), HttpStatus.NOT_FOUND);
         productService.delete(id);
-        return new ResponseEntity(new Mensaje("producto eliminado"), HttpStatus.OK);
+        return new ResponseEntity(new Mensaje("Producto deleted"), HttpStatus.OK);
     }
 	
 	@ApiOperation("Actualizar producto mediante un json")
-	@PutMapping("/actualizarProduct")
-	   public ResponseEntity<?> update(@PathVariable("id")int id, @RequestBody Product product){
+	@PutMapping("/actualizarProduct/{id}")
+	   public ResponseEntity<?> update(@PathVariable("id")Integer id, @RequestBody Product product){
         if(!productService.existsById(id))
-            return new ResponseEntity(new Mensaje("no existe"), HttpStatus.NOT_FOUND);
-        if(productService.existsByTitle(product.getTitle()) && productService.getByTitle(product.getTitle()).get().getId() != id)
-            return new ResponseEntity(new Mensaje("ese titulo ya existe"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("No exist"), HttpStatus.NOT_FOUND);
         if(StringUtils.isBlank(product.getTitle()))
-            return new ResponseEntity(new Mensaje("el titulo es obligatorio"), HttpStatus.BAD_REQUEST);
-        if(product.getPrice()==null || product.getPrice()<0 )
-            return new ResponseEntity(new Mensaje("el precio debe ser mayor que 0"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(new Mensaje("The title is required"), HttpStatus.BAD_REQUEST);
+        if(product.getPrice()==null || product.getPrice()<=0 )
+            return new ResponseEntity(new Mensaje("Price must be greater than 0"), HttpStatus.BAD_REQUEST);
 
         Product prod = productService.getOne(id).get();
         prod.setTitle(product.getTitle());
         prod.setPrice(product.getPrice());
+        prod.setImages(product.getImages());
+        prod.setDescription(product.getDescription());
+        prod.setCategoryId(product.getCategoryId());
         productService.save(prod);
-        return new ResponseEntity(new Mensaje("producto actualizado"), HttpStatus.OK);
+        return new ResponseEntity(new Mensaje("Producto updated"), HttpStatus.OK);
     }
 
 }

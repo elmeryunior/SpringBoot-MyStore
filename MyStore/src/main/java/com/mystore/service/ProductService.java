@@ -30,7 +30,7 @@ public class ProductService {
         return productRepo.listarPageCat(categId,limit, offset);
     }
     
-    public Optional<Product> getOne(int id){
+    public Optional<Product> getOne(Integer id){
         return productRepo.findById(id);
     }
 
@@ -41,11 +41,11 @@ public class ProductService {
     	return productRepo.findByCategoryId(categoryId);
     }
     
-    public void delete(int id){
+    public void delete(Integer id){
     	productRepo.deleteById(id);
     }
 
-    public boolean existsById(int id){
+    public boolean existsById(Integer id){
         return productRepo.existsById(id);
     }
 
